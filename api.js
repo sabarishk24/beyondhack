@@ -20,6 +20,15 @@ const CareAPI = {
     if (!r.ok) throw new Error('Not found');
     return r.json();
   },
+  // Doctors for one facility (optionally one service) on a given day (YYYY-MM-DD, default today in IST).
+  async doctors(facility, { service = '', day = '' } = {}) {
+    const params = new URLSearchParams({ facility });
+    if (service) params.set('service', service);
+    if (day) params.set('day', day);
+    const r = await fetch('/api/doctors?' + params);
+    if (!r.ok) throw new Error('Doctors lookup failed');
+    return r.json();
+  },
   // Distance is computed here so the user's location is never sent to the server.
   withDistance(results, here) {
     const rad = (x) => (x * Math.PI) / 180;
